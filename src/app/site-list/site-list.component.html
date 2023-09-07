@@ -1,0 +1,66 @@
+<app-navbar></app-navbar>
+<div class="container mx-auto my-16">
+    <h1 class="text-5xl mt-0 mb-5">Menedżer Haseł</h1>
+    <p class="mb-5">Witaj w menedżerze haseł, możesz tutaj dodać swoje hasła do przechowania.</p>
+    <button (click)="showForm()" class="mb-5 mx-0.5 px-5 py-3 text-sm bg-gray-900 text-white shadow rounded-md">
+        Dodaj nową stronę
+    </button>
+
+    <div *ngIf="isSuccess" class="p-5 my-3 bg-teal-100 text-teal-900 rounded-lg">
+        {{successMessage}}
+    </div>
+
+    <div *ngIf="addNewPage" class="px-20 py-10 mb-10 my-5 border-4 border-gray-900">
+        <h2 class="text-3xl text-center">{{formState}} stronę</h2>
+        <p class="text-center">Możesz {{formState}} stronę z formularza poniżej</p>
+        <form #f="ngForm" (ngSubmit)="onSubmit(f.value)">
+            <div class="flex flex-col">
+                <label class="text-lg font-medium mb-2">Nazwa strony</label>
+                <input [(ngModel)]='siteName' type="text" name="siteName" class="border-2 border-gray-900 p-2 rounded-lg w-full">
+            </div>
+            <div class="flex flex-col">
+                <label class="text-lg font-medium mb-2">Adres strony</label>
+                <input [(ngModel)]="siteURL" type="text" name="siteURL" class="border-2 border-gray-900 p-2 rounded-lg w-full">
+            </div>
+            <div class="flex flex-col">
+                <label class="text-lg font-medium mb-2">Adres zdjęcia strony</label>
+                <input [(ngModel)]="siteImgURL" type="text" name="siteImgURL" class="border-2 border-gray-900 p-2 rounded-lg w-full">
+            </div>
+            <button class="mt-10 mx-0.5 px-5 py-3 text-sm bg-gray-900 shadow rounded-md  text-white">
+                {{formState}} stronę
+            </button>
+            
+            <button (click)="hideForm()"class="mt-10 mx-0.5 px-5 py-3 text-sm border-2 border-gray-900 text-gray-900 rounded-md shadow-md">
+                Anuluj
+            </button>
+
+        </form>
+    </div>
+
+    <div class="grid grid-cols-4 gap-5">
+        <div *ngFor="let site of allSites | async" class="shadow-lg border-2 border-gray-900">
+            <img [src]="site.siteImgURL">
+            <h3 class="p-3 text-xl font-bold">{{site.siteName}}</h3>
+            <div class="w-60 m-3 px-3 bg-blue-200 text-blue-800 rounded-lg text-sm">
+                {{site.siteURL}}
+            </div>
+            <button routerLink="/password-list" 
+            [queryParams]="{id: site.id, siteName: site.siteName, siteURL: site.siteURL, siteImgURL: site.siteImgURL }"
+            class="my-3 ml-3 mx-0.5 px-5 py-3 text-sm bg-gray-900 text-white shadow rounded-md">
+                Dodaj hasło
+            </button>
+            
+            <button 
+            (click) ="editSite(site.siteName, site.siteURL, site.siteImgURL, site.id)"
+            (click)="showForm()"
+             class="my-3 mx-0.5 px-5 py-3 text-sm border-2 border-gray-900 text-gray-900 shadow rounded-md">
+               Edytuj
+            </button>
+
+            <button (click)="deleteSite(site.id)"
+             class="my-3 mx-0.5 px-5 py-3 text-sm border-2 border-gray-900 text-gray-900 shadow rounded-md">
+                Usuń
+            </button>
+        </div>
+    </div>
+</div>>
